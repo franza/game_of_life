@@ -1,0 +1,13 @@
+name: game_of_life
+version: 0.1.0
+
+authors:
+  - franza <nico.franza@gmail.com>
+
+targets:
+  game_of_life:
+    main: src/game_of_life.cr
+
+crystal: 0.33.0
+
+license: MIT
