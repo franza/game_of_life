@@ -34,6 +34,8 @@ class GameOfLife::Field
 
     (-1..1).each do |delta_i|
       (-1..1).each do |delta_j|
+        next if delta_i == 0 && delta_j == 0
+
         sur_i = i + delta_i
         sur_j = j + delta_j
 
