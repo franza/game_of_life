@@ -16,7 +16,7 @@ class GameOfLife::View
 
 
   private def cls
-    print "\033[H\033[2J"  
+    print "\033[H\033[2J"
   end
 
   def render(f : Field)

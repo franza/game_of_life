@@ -31,11 +31,9 @@ end
 
 v = GameOfLife::View.new(STDIN)
 f = GameOfLife.gen_random_field
-c = GameOfLife::Continuum.new(f)
 
-v.render f
-
-c.each do |f|
+loop do
   v.render f
+  f = f.next_gen
   sleep Time::Span.new(nanoseconds: 400_000_000)
 end
