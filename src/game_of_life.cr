@@ -8,32 +8,26 @@ module GameOfLife
   @@height = 50
   @@width  = 50
 
-  def random_state : State
+  def random_cell : Cell
     case Random.rand(0..1)
     when 0
-      State::Dead
+      Cell::Dead
     else
-      State::Alive
+      Cell::Alive
     end
   end
 
-  def gen_random_field : Field
-    f = Field.new(@@height, @@width)
-    @@height.times do |i|
-      @@width.times do |j|
-        f[i][j] = random_state
-      end
-    end
-    f
+  def random_universe : Universe
+    Universe.new(@@height, @@width) { random_cell }
   end
 end
 
 
 v = GameOfLife::View.new(STDIN)
-f = GameOfLife.gen_random_field
+uni = GameOfLife.random_universe
 
 loop do
-  v.render f
-  f = f.next_gen
+  v.render uni
+  uni = uni.next_gen
   sleep Time::Span.new(nanoseconds: 400_000_000)
 end

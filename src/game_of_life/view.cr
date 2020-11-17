@@ -1,15 +1,14 @@
-require "./field"
-require "./state"
+require "./universe"
 
 class GameOfLife::View
   def initialize(@io : IO)
   end
   
-  private def state_to_s(s : State)
-    case s
-    when State::Alive
+  def render(cell : Cell)
+    case cell
+    when Cell::Alive
       "■"
-    when State::Dead
+    when Cell::Dead
       "□"
     end
   end
@@ -19,16 +18,16 @@ class GameOfLife::View
     print "\033[H\033[2J"
   end
 
-  def render(f : Field)
+  def render(uni : Universe)
     cls
     
-    f.each do |row|
+    uni.each do |row|
       if row.empty?
         @io << "empty\n"
         next
       end
 
-      @io << row.join(" ") { |state| state_to_s(state) }
+      @io << row.join(" ") { |cell| render cell }
       @io << "\n"
     end
   end
