@@ -19,7 +19,7 @@ module GameOfLife
     end
 
     def initialize(@height : Int32, @width : Int32)
-      @arr = Array(Row).new(@height) { Row.new(@height, Cell::Dead) }
+      @arr = Array(Row).new(@height) { Row.new(@width, Cell::Dead) }
     end
 
     delegate each,         to: @arr
@@ -58,7 +58,8 @@ module GameOfLife
       h, w = dim
       next_gen_uni = Universe.new(h, w)
   
-      flat_each_index { |i, j| next_gen_uni[i][j] = evolve(i, j) }
+      flat_each_index { |i, j| 
+        next_gen_uni[i][j] = evolve(i, j) }
       next_gen_uni
     end
   
