@@ -22,12 +22,45 @@ module GameOfLife
   end
 end
 
+quit_ch = Channel(Nil).new
+controls_ch = Channel(Char).new
 
-v = GameOfLife::View.new(STDIN)
-uni = GameOfLife.random_universe
-
-loop do
-  v.render uni
-  uni = uni.next_gen
-  sleep Time::Span.new(nanoseconds: 400_000_000)
+control_loop = spawn do
+  loop do
+    ch = STDIN.read_char
+    controls_ch.send ch.not_nil!
+  end
 end
+
+main_loop = spawn do
+  v = GameOfLife::View.new(STDIN)
+  uni = GameOfLife.random_universe
+  sleep_time = 30
+
+  re_render = ->() {
+    v.render uni
+    uni = uni.next_gen
+  }
+
+  re_render.call
+
+  loop do
+    select
+    when key = controls_ch.receive
+      if key == 'q'
+        quit_ch.send nil
+        break
+      elsif key == 'i'
+        sleep_time += 100
+      elsif key == 'd'
+        sleep_time -= 100 if sleep_time > 100
+      elsif key == '\n'
+        re_render.call
+      end
+    when timeout(sleep_time.milliseconds)
+      re_render.call
+    end
+  end    
+end
+
+quit_ch.receive

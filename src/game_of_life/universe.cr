@@ -10,10 +10,10 @@ module GameOfLife
 
     include Indexable(Row)
   
-    def initialize(@height : Int32, @width : Int32, &block : (Int32, Int32) -> Cell)
+    def initialize(@height : Int32, @width : Int32)
       @arr = Array(Row).new(height) do |i|
         Row.new(@width) do |j|
-          block.call(i, j)
+          yield i, j
         end
       end
     end
